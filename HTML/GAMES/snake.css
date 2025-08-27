@@ -1,0 +1,53 @@
+body {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+}
+h1 {
+  color: #fff;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px #222;
+}
+.back {
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+canvas {
+  border-radius: 12px;
+  box-shadow: 0 0 24px #1e3c72;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  margin-bottom: 20px;
+}
+.score {
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px #222;
+}
+button {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #222;
+  transition: background 0.2s;
+}
+button:hover {
+  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+}

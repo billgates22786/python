@@ -1,0 +1,70 @@
+body {
+  background: linear-gradient(135deg, #ffaf7b 0%, #d76d77 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  background: rgba(255,255,255,0.10);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.17);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+}
+h1 {
+  color: #fff;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px #222;
+}
+.back {
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+#board {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 10px;
+  margin: 0 auto 22px auto;
+}
+.cell {
+  background: linear-gradient(135deg, #f7cac9 0%, #92a8d1 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #d76d77;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 42px;
+  color: #2a5298;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+.cell:hover {
+  background: linear-gradient(135deg, #fae3d9 0%, #b8a9c9 100%);
+}
+.status {
+  color: #fff;
+  font-size: 22px;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px #222;
+}
+button {
+  background: linear-gradient(135deg, #d76d77 0%, #ffaf7b 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #222;
+  transition: background 0.2s;
+}
+button:hover {
+  background: linear-gradient(135deg, #ffaf7b 0%, #d76d77 100%);
+}
