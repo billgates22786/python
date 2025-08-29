@@ -69,12 +69,21 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        #explanation-container {
+            animation: fadeIn 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="container mx-auto p-8 rounded-3xl shadow-lg">
         <div id="quiz-app">
             <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">PC Assembly & Troubleshooting Quiz</h1>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" style="width: 0%;"></div>
+            </div>
 
             <div id="question-container" class="mb-6">
                 <p id="question-text" class="text-xl font-semibold mb-4 text-gray-700"></p>
@@ -83,6 +92,12 @@
 
             <div id="feedback-container" class="text-center min-h-12 flex items-center justify-center">
                 <p id="feedback-message" class="text-lg font-medium feedback-message"></p>
+            </div>
+            
+            <!-- Explanation Container -->
+            <div id="explanation-container" class="mt-4 p-4 bg-gray-100 rounded-xl" style="display: none;">
+                <p class="font-bold text-gray-800 mb-2">Explanation:</p>
+                <p id="explanation-text" class="text-sm text-gray-700"></p>
             </div>
 
             <button id="next-button" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl mt-6 transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" style="display: none;">Next Question</button>
@@ -105,6 +120,9 @@
             const scoreContainer = document.getElementById('score-container');
             const scoreText = document.getElementById('score-text');
             const restartButton = document.getElementById('restart-button');
+            const progressBar = document.getElementById('progress-bar');
+            const explanationContainer = document.getElementById('explanation-container');
+            const explanationText = document.getElementById('explanation-text');
 
             let currentQuestionIndex = 0;
             let score = 0;
@@ -119,7 +137,8 @@
                         "Supervises the flow of data and executes instructions.",
                         "Manages faulty components and drivers."
                     ],
-                    answer: "Supervises the flow of data and executes instructions."
+                    answer: "Supervises the flow of data and executes instructions.",
+                    explanation: "The Control Unit is the brain of the CPU that directs and supervises all operations, including data flow and instruction execution."
                 },
                 {
                     question: "Which of the following is considered a non-emissive display?",
@@ -129,7 +148,8 @@
                         "LCD (Liquid-Crystal Device)",
                         "CRT (Cathode-Ray Tube)"
                     ],
-                    answer: "LCD (Liquid-Crystal Device)"
+                    answer: "LCD (Liquid-Crystal Device)",
+                    explanation: "Non-emissive displays, such as LCDs, use optical effects and an external light source to create images, unlike emissive displays that generate their own light."
                 },
                 {
                     question: "What is the purpose of a video card?",
@@ -139,7 +159,8 @@
                         "To store long-term data.",
                         "To generate and output images to a display."
                     ],
-                    answer: "To generate and output images to a display."
+                    answer: "To generate and output images to a display.",
+                    explanation: "A video card is an expansion card specifically designed to generate and output images to a connected display or monitor."
                 },
                 {
                     question: "According to the document, what is the main disadvantage of a Daisy Wheel printer?",
@@ -149,7 +170,8 @@
                         "Poor quality output",
                         "It is not reliable"
                     ],
-                    answer: "Slow speed"
+                    answer: "Slow speed",
+                    explanation: "The document states that a key disadvantage of a Daisy Wheel printer is that it is slower than a Dot Matrix Printer (DMP)."
                 },
                 {
                     question: "What type of processor is designed to control mechanical and electrical functions?",
@@ -159,7 +181,8 @@
                         "Microcontroller",
                         "Digital Signal Processor"
                     ],
-                    answer: "Embedded Processor"
+                    answer: "Embedded Processor",
+                    explanation: "An embedded processor is specifically designed to control mechanical and electrical functions within a system."
                 },
                 {
                     question: "Which of these is a hardware diagnostic tool mentioned for isolating defective components?",
@@ -169,7 +192,8 @@
                         "Device Manager",
                         "Command Prompt"
                     ],
-                    answer: "Software diagnostic disk"
+                    answer: "Software diagnostic disk",
+                    explanation: "The document lists a 'Software diagnostic disk' as a tool that can run predetermined tests to help locate system failures."
                 },
                 {
                     question: "What is the most common cause of a hard drive making clicking and grinding noises?",
@@ -179,7 +203,8 @@
                         "Damage to the read/write heads",
                         "Excessive heat"
                     ],
-                    answer: "Damage to the read/write heads"
+                    answer: "Damage to the read/write heads",
+                    explanation: "Clicking and grinding noises are mechanical sounds that indicate damage to the read/write heads of the hard drive, a serious hardware issue."
                 },
                 {
                     question: "What is the primary function of a `kernel` in an operating system?",
@@ -189,7 +214,8 @@
                         "To store and access files on the hard drive.",
                         "To handle network connections."
                     ],
-                    answer: "To manage system resources and act as a bridge between software and hardware."
+                    answer: "To manage system resources and act as a bridge between software and hardware.",
+                    explanation: "The kernel is the core component of an operating system that manages system resources and serves as the bridge between software and hardware."
                 },
                 {
                     question: "Which type of printer uses a light source and toner to create images?",
@@ -199,7 +225,8 @@
                         "Daisy Wheel Printer",
                         "Laser/LED Printer"
                     ],
-                    answer: "Laser/LED Printer"
+                    answer: "Laser/LED Printer",
+                    explanation: "Laser/LED printers use a laser or LED light source to create an image on a drum, which then attracts toner (a fine powder) that is fused onto the paper."
                 },
                 {
                     question: "What is a 'PCI' as mentioned in the document?",
@@ -209,14 +236,21 @@
                         "A type of bus that transfers data between components",
                         "A type of hard drive"
                     ],
-                    answer: "A type of bus that transfers data between components"
+                    answer: "A type of bus that transfers data between components",
+                    explanation: "PCI stands for Peripheral Component Interconnect, a common bus standard used to transfer data between computer components."
                 }
             ];
+
+            const updateProgressBar = () => {
+                const progress = (currentQuestionIndex / quizData.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            };
 
             const displayQuestion = () => {
                 isAnswered = false;
                 nextButton.style.display = 'none';
                 feedbackMessage.textContent = '';
+                explanationContainer.style.display = 'none';
                 optionsContainer.innerHTML = '';
                 const currentQuestion = quizData[currentQuestionIndex];
                 questionText.textContent = `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
@@ -228,6 +262,7 @@
                     button.onclick = () => handleAnswer(option, button);
                     optionsContainer.appendChild(button);
                 });
+                updateProgressBar();
             };
 
             const handleAnswer = (selectedOption, button) => {
@@ -247,6 +282,10 @@
                     feedbackMessage.className = 'text-red-600 font-bold feedback-message';
                     button.className = 'option-button w-full text-left py-3 px-4 rounded-xl incorrect';
                 }
+
+                // Show the explanation
+                explanationText.textContent = currentQuestion.explanation;
+                explanationContainer.style.display = 'block';
 
                 // Disable all buttons and show correct answer
                 Array.from(optionsContainer.children).forEach(btn => {
@@ -270,9 +309,12 @@
                 questionText.style.display = 'none';
                 optionsContainer.style.display = 'none';
                 feedbackMessage.style.display = 'none';
+                explanationContainer.style.display = 'none';
                 nextButton.style.display = 'none';
                 scoreContainer.style.display = 'block';
                 scoreText.textContent = `${score} / ${quizData.length}`;
+                // Final update of progress bar
+                progressBar.style.width = `100%`;
             };
 
             const restartQuiz = () => {
@@ -298,5 +340,3 @@
     </script>
 </body>
 </html>
-
-<!-- https://g.co/gemini/share/6e1cc795f26d -->
