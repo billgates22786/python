@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Assembly & Troubleshooting Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-button {
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .option-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .correct {
+            background-color: #10B981;
+            color: white;
+            border-color: #10B981;
+        }
+
+        .incorrect {
+            background-color: #EF4444;
+            color: white;
+            border-color: #EF4444;
+        }
+
+        .disabled-correct {
+            background-color: #A7F3D0;
+            color: #10B981;
+            border-color: #A7F3D0;
+        }
+
+        .disabled-incorrect {
+            background-color: #FEE2E2;
+            color: #EF4444;
+            border-color: #FEE2E2;
+        }
+
+        .feedback-message {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #explanation-container {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="container mx-auto p-8 rounded-3xl shadow-lg">
+        <div id="quiz-app">
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">PC Assembly & Troubleshooting Quiz</h1>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" style="width: 0%;"></div>
+            </div>
+
+            <div id="question-container" class="mb-6">
+                <p id="question-text" class="text-xl font-semibold mb-4 text-gray-700"></p>
+                <div id="options-container" class="space-y-3"></div>
+            </div>
+
+            <div id="feedback-container" class="text-center min-h-12 flex items-center justify-center">
+                <p id="feedback-message" class="text-lg font-medium feedback-message"></p>
+            </div>
+            
+            <!-- Explanation Container -->
+            <div id="explanation-container" class="mt-4 p-4 bg-gray-100 rounded-xl" style="display: none;">
+                <p class="font-bold text-gray-800 mb-2">Explanation:</p>
+                <p id="explanation-text" class="text-sm text-gray-700"></p>
+            </div>
+
+            <button id="next-button" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl mt-6 transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" style="display: none;">Next Question</button>
+
+            <div id="score-container" class="text-center mt-6" style="display: none;">
+                <p class="text-2xl font-bold text-gray-800">Quiz Complete!</p>
+                <p class="text-xl text-gray-700 mt-2">Your score: <span id="score-text" class="text-blue-600 font-bold"></span></p>
+                <button id="restart-button" class="mt-4 bg-green-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-green-700 transition-colors">Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizContainer = document.getElementById('quiz-app');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const nextButton = document.getElementById('next-button');
+            const scoreContainer = document.getElementById('score-container');
+            const scoreText = document.getElementById('score-text');
+            const restartButton = document.getElementById('restart-button');
+            const progressBar = document.getElementById('progress-bar');
+            const explanationContainer = document.getElementById('explanation-container');
+            const explanationText = document.getElementById('explanation-text');
+
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let isAnswered = false;
+
+            const quizData = [
+                {
+                    question: "What is the function of the Control Unit in a CPU?",
+                    options: [
+                        "Performs arithmetic and logical operations.",
+                        "Stores data and instructions for the computer.",
+                        "Supervises the flow of data and executes instructions.",
+                        "Manages faulty components and drivers."
+                    ],
+                    answer: "Supervises the flow of data and executes instructions.",
+                    explanation: "The Control Unit is the brain of the CPU that directs and supervises all operations, including data flow and instruction execution."
+                },
+                {
+                    question: "Which of the following is considered a non-emissive display?",
+                    options: [
+                        "LED (Light-Emitting Diodes)",
+                        "Plasma Panel",
+                        "LCD (Liquid-Crystal Device)",
+                        "CRT (Cathode-Ray Tube)"
+                    ],
+                    answer: "LCD (Liquid-Crystal Device)",
+                    explanation: "Non-emissive displays, such as LCDs, use optical effects and an external light source to create images, unlike emissive displays that generate their own light."
+                },
+                {
+                    question: "What is the purpose of a video card?",
+                    options: [
+                        "To process audio signals.",
+                        "To transfer data between components.",
+                        "To store long-term data.",
+                        "To generate and output images to a display."
+                    ],
+                    answer: "To generate and output images to a display.",
+                    explanation: "A video card is an expansion card specifically designed to generate and output images to a connected display or monitor."
+                },
+                {
+                    question: "According to the document, what is the main disadvantage of a Daisy Wheel printer?",
+                    options: [
+                        "Very low consumable costs",
+                        "Slow speed",
+                        "Poor quality output",
+                        "It is not reliable"
+                    ],
+                    answer: "Slow speed",
+                    explanation: "The document states that a key disadvantage of a Daisy Wheel printer is that it is slower than a Dot Matrix Printer (DMP)."
+                },
+                {
+                    question: "What type of processor is designed to control mechanical and electrical functions?",
+                    options: [
+                        "Microprocessor",
+                        "Embedded Processor",
+                        "Microcontroller",
+                        "Digital Signal Processor"
+                    ],
+                    answer: "Embedded Processor",
+                    explanation: "An embedded processor is specifically designed to control mechanical and electrical functions within a system."
+                },
+                {
+                    question: "Which of these is a hardware diagnostic tool mentioned for isolating defective components?",
+                    options: [
+                        "BIOS",
+                        "Software diagnostic disk",
+                        "Device Manager",
+                        "Command Prompt"
+                    ],
+                    answer: "Software diagnostic disk",
+                    explanation: "The document lists a 'Software diagnostic disk' as a tool that can run predetermined tests to help locate system failures."
+                },
+                {
+                    question: "What is the most common cause of a hard drive making clicking and grinding noises?",
+                    options: [
+                        "Incorrect cabling",
+                        "A defective BIOS",
+                        "Damage to the read/write heads",
+                        "Excessive heat"
+                    ],
+                    answer: "Damage to the read/write heads",
+                    explanation: "Clicking and grinding noises are mechanical sounds that indicate damage to the read/write heads of the hard drive, a serious hardware issue."
+                },
+                {
+                    question: "What is the primary function of a `kernel` in an operating system?",
+                    options: [
+                        "To provide a graphical user interface (GUI).",
+                        "To manage system resources and act as a bridge between software and hardware.",
+                        "To store and access files on the hard drive.",
+                        "To handle network connections."
+                    ],
+                    answer: "To manage system resources and act as a bridge between software and hardware.",
+                    explanation: "The kernel is the core component of an operating system that manages system resources and serves as the bridge between software and hardware."
+                },
+                {
+                    question: "Which type of printer uses a light source and toner to create images?",
+                    options: [
+                        "Dot Matrix Printer",
+                        "Inkjet Printer",
+                        "Daisy Wheel Printer",
+                        "Laser/LED Printer"
+                    ],
+                    answer: "Laser/LED Printer",
+                    explanation: "Laser/LED printers use a laser or LED light source to create an image on a drum, which then attracts toner (a fine powder) that is fused onto the paper."
+                },
+                {
+                    question: "What is a 'PCI' as mentioned in the document?",
+                    options: [
+                        "A type of processor",
+                        "A type of monitor",
+                        "A type of bus that transfers data between components",
+                        "A type of hard drive"
+                    ],
+                    answer: "A type of bus that transfers data between components",
+                    explanation: "PCI stands for Peripheral Component Interconnect, a common bus standard used to transfer data between computer components."
+                }
+            ];
+
+            const updateProgressBar = () => {
+                const progress = (currentQuestionIndex / quizData.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            };
+
+            const displayQuestion = () => {
+                isAnswered = false;
+                nextButton.style.display = 'none';
+                feedbackMessage.textContent = '';
+                explanationContainer.style.display = 'none';
+                optionsContainer.innerHTML = '';
+                const currentQuestion = quizData[currentQuestionIndex];
+                questionText.textContent = `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+                
+                currentQuestion.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.className = "option-button w-full text-left py-3 px-4 rounded-xl border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 focus:outline-none";
+                    button.onclick = () => handleAnswer(option, button);
+                    optionsContainer.appendChild(button);
+                });
+                updateProgressBar();
+            };
+
+            const handleAnswer = (selectedOption, button) => {
+                if (isAnswered) return;
+                isAnswered = true;
+
+                const currentQuestion = quizData[currentQuestionIndex];
+                const correctOption = currentQuestion.answer;
+                
+                if (selectedOption === correctOption) {
+                    score++;
+                    feedbackMessage.textContent = 'Correct!';
+                    feedbackMessage.className = 'text-green-600 font-bold feedback-message';
+                    button.className = 'option-button w-full text-left py-3 px-4 rounded-xl correct';
+                } else {
+                    feedbackMessage.textContent = 'Incorrect.';
+                    feedbackMessage.className = 'text-red-600 font-bold feedback-message';
+                    button.className = 'option-button w-full text-left py-3 px-4 rounded-xl incorrect';
+                }
+
+                // Show the explanation
+                explanationText.textContent = currentQuestion.explanation;
+                explanationContainer.style.display = 'block';
+
+                // Disable all buttons and show correct answer
+                Array.from(optionsContainer.children).forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent === correctOption) {
+                        btn.className = 'option-button w-full text-left py-3 px-4 rounded-xl disabled-correct';
+                    } else if (btn.textContent !== selectedOption) {
+                        btn.className = 'option-button w-full text-left py-3 px-4 rounded-xl disabled-incorrect';
+                    }
+                });
+
+                if (currentQuestionIndex < quizData.length - 1) {
+                    nextButton.style.display = 'block';
+                } else {
+                    nextButton.style.display = 'none';
+                    showScore();
+                }
+            };
+
+            const showScore = () => {
+                questionText.style.display = 'none';
+                optionsContainer.style.display = 'none';
+                feedbackMessage.style.display = 'none';
+                explanationContainer.style.display = 'none';
+                nextButton.style.display = 'none';
+                scoreContainer.style.display = 'block';
+                scoreText.textContent = `${score} / ${quizData.length}`;
+                // Final update of progress bar
+                progressBar.style.width = `100%`;
+            };
+
+            const restartQuiz = () => {
+                currentQuestionIndex = 0;
+                score = 0;
+                questionText.style.display = 'block';
+                optionsContainer.style.display = 'block';
+                feedbackMessage.style.display = 'block';
+                scoreContainer.style.display = 'none';
+                displayQuestion();
+            };
+
+            nextButton.addEventListener('click', () => {
+                currentQuestionIndex++;
+                displayQuestion();
+            });
+
+            restartButton.addEventListener('click', restartQuiz);
+
+            // Initial display
+            displayQuestion();
+        });
+    </script>
+</body>
+</html>
