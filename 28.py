@@ -12,3 +12,4 @@ end = int(input("Enter end of range: "))
 
 # Function call
 check_range(num, start, end)
+    
