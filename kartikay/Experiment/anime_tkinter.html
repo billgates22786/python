@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Titles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #animeList {
+            list-style: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Anime Titles</h1>
+<p>Enter anime titles (type "done" to finish):</p>
+
+<input type="text" id="animeInput" placeholder="Enter anime title" />
+<button onclick="addAnimeTitle()">Add</button>
+
+<ul id="animeList"></ul>
+
+<script>
+    let animeTitles = [];
+
+    function addAnimeTitle() {
+        const input = document.getElementById('animeInput');
+        const title = input.value.trim();
+
+        if (title.toLowerCase() === 'done') {
+            displayUniqueTitles();
+            input.value = '';
+            return;
+        }
+
+        if (title && !animeTitles.includes(title)) {
+            animeTitles.push(title);
+            const listItem = document.createElement('li');
+            listItem.textContent = title;
+            document.getElementById('animeList').appendChild(listItem);
+        }
+        input.value = '';
+    }
+
+    function displayUniqueTitles() {
+        animeTitles = Array.from(new Set(animeTitles)).sort();
+        const list = document.getElementById('animeList');
+        list.innerHTML = ''; // Clear existing list
+
+        animeTitles.forEach(title => {
+            const listItem = document.createElement('li');
+            listItem.textContent = title;
+            list.appendChild(listItem);
+        });
+
+        alert("Anime titles saved without duplicates.");
+    }
+</script>
+
+</body>
+</html>

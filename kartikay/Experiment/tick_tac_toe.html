@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe - Play Against Computer</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4e54c8, #8f94fb);
+    }
+    h1 {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      background-color: #333;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .cell:hover {
+      background-color: #444;
+    }
+    #status, #reset-btn {
+      margin-top: 20px;
+      font-size: 1.2em;
+      text-align: center;
+      color: #fff;
+    }
+    #reset-btn {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #reset-btn:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tic Tac Toe</h1>
+  <div id="game-board">
+    <div class="cell" onclick="playerMove(0)"></div>
+    <div class="cell" onclick="playerMove(1)"></div>
+    <div class="cell" onclick="playerMove(2)"></div>
+    <div class="cell" onclick="playerMove(3)"></div>
+    <div class="cell" onclick="playerMove(4)"></div>
+    <div class="cell" onclick="playerMove(5)"></div>
+    <div class="cell" onclick="playerMove(6)"></div>
+    <div class="cell" onclick="playerMove(7)"></div>
+    <div class="cell" onclick="playerMove(8)"></div>
+  </div>
+
+  <div id="status">Player X's turn</div>
+  <button id="reset-btn" onclick="resetGame()">Restart Game</button>
+
+  <script>
+    const cells = Array.from(document.querySelectorAll('.cell'));
+    let board = Array(9).fill(null);
+    let currentPlayer = 'X';
+    const statusDisplay = document.getElementById('status');
+
+    function playerMove(index) {
+      if (board[index] === null && currentPlayer === 'X') {
+        makeMove(index, 'X');
+        if (!checkWin('X') && !isDraw()) {
+          currentPlayer = 'O';
+          setTimeout(computerMove, 500);
+        }
+      }
+    }
+
+    function computerMove() {
+      let availableMoves = board.map((val, idx) => val === null ? idx : null).filter(val => val !== null);
+      if (availableMoves.length > 0) {
+        let randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+        makeMove(randomMove, 'O');
+        if (!checkWin('O') && !isDraw()) {
+          currentPlayer = 'X';
+          statusDisplay.textContent = "Player X's turn";
+        }
+      }
+    }
+
+    function makeMove(index, player) {
+      board[index] = player;
+      cells[index].textContent = player;
+      cells[index].style.cursor = 'not-allowed';
+      if (checkWin(player)) {
+        statusDisplay.textContent = `Player ${player} wins!`;
+        disableBoard();
+      } else if (isDraw()) {
+        statusDisplay.textContent = "It's a draw!";
+      } else {
+        statusDisplay.textContent = player === 'X' ? "Computer's turn (O)" : "Player X's turn";
+      }
+    }
+
+    function checkWin(player) {
+      const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+      return winningCombinations.some(combination =>
+        combination.every(index => board[index] === player)
+      );
+    }
+
+    function isDraw() {
+      return board.every(cell => cell !== null);
+    }
+
+    function disableBoard() {
+      cells.forEach(cell => cell.onclick = null);
+    }
+
+    function resetGame() {
+      board.fill(null);
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.style.cursor = 'pointer';
+        cell.onclick = () => playerMove(cells.indexOf(cell));
+      });
+      currentPlayer = 'X';
+      statusDisplay.textContent = "Player X's turn";
+    }
+  </script>
+
+</body>
+</html>
